@@ -3,6 +3,10 @@ package Balanceador_Parenteses.main;
 import Balanceador_Parenteses.main.controllers.TextIOController;
 import Balanceador_Parenteses.main.models.ValidadorModel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 public class Main {
 
     static ValidadorModel validador;
@@ -16,8 +20,33 @@ public class Main {
             else
                 return false;
         }
-        return true;
+        return false;
     }
+
+    private static void verificaDocumento(String Texto, ArrayList<String> Resultados)
+    {
+        String[] dados = Texto.split("\r\n");
+
+        for (int i = 0; i < dados.length;i++)
+        {
+            if(validador.estaBalanceado(dados[i]))
+                Resultados.add("OK");
+            else
+                Resultados.add("INVALIDO");
+        }
+
+    }
+
+    private static void escreveArquivoSaida(String Texto, ArrayList<String> Resultados, String NomeArquivo)
+    {
+        String[] BufferAux = Texto.split("\r\n");
+        String NomeCorrigido = NomeArquivo.substring(0,NomeArquivo.indexOf('.'));
+        for(int i = 0; i<BufferAux.length;i++)
+        {
+            TextIOController.write(BufferAux[i] + "-" + Resultados.get(i),NomeCorrigido + "-check.txt");
+        }
+    }
+
 
     public static void main(String[] args) {
 
@@ -28,9 +57,17 @@ public class Main {
         }
 
         String NomeArquivo = args[0];
-        validador = new ValidadorModel();
 
-        TextIOController.FetchData(NomeArquivo);
+        try {
+            ArrayList<String> Resultados = new ArrayList<>();
+
+            String texto = TextIOController.FetchData(NomeArquivo);
+            verificaDocumento(texto,Resultados);
+            escreveArquivoSaida(texto,Resultados,NomeArquivo);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

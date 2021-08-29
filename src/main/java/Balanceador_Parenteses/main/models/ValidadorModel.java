@@ -1,96 +1,81 @@
 package Balanceador_Parenteses.main.models;
 
+import java.util.Stack;
+
 public class ValidadorModel {
 
-    private int QtdAbreParenteses;
 
-    private int QtdFechaParenteses;
-
-    private int QtdAbreColchete;
-
-    private int QtdFechaColchete;
-
-    private int QtdAbreChave;
-
-    private int QtdFechaChave;
-
-    private int QtdAbreMaiorQ;
-
-    private int QtdFechaMaiorQ;
-
-    private int QtdAbreMenorQ;
-
-    private int QtdFechaMenorQ;
 
     public ValidadorModel(){
-        QtdAbreParenteses = 0;
-        QtdFechaParenteses = 0;
-        QtdAbreColchete = 0;
-        QtdFechaColchete = 0;
-        QtdAbreChave = 0;
-        QtdFechaChave = 0;
-        QtdAbreMaiorQ = 0;
-        QtdFechaMaiorQ = 0;
-        QtdAbreMenorQ = 0;
-        QtdFechaMenorQ = 0;
+
+
     }
 
-    public void encontrouAbreParenteses()
+    private static boolean verificaFechamento(Character lido, Character dadoPilha)
     {
-        QtdAbreParenteses++;
+        boolean Valido = false;
+        switch (dadoPilha)
+        {
+            case '{':
+                if(lido == '}')
+                    Valido = true;
+                else
+                    Valido = false;
+                break;
+
+            case '[':
+                if(lido == ']')
+                    Valido = true;
+                else
+                    Valido = false;
+                break;
+
+            case '(':
+                if(lido == ')')
+                    Valido = true;
+                else
+                    Valido = false;
+                break;
+
+            case '<':
+                if(lido == '>')
+                    Valido = true;
+                else
+                    Valido = false;
+                break;
+        }
+        return Valido;
     }
 
-    public void encontrouFechaParenteses()
+    public static boolean estaBalanceado(String texto)
     {
-        QtdFechaParenteses++;
-    }
+        Stack Pilha = new Stack();
 
-    public void encontrouAbreColchete()
-    {
-        QtdAbreColchete++;
-    }
+        for(int i=0; i < texto.length();i++)
+        {
+            Character c = texto.charAt(i);
 
-    public void encontrouFechaColchete()
-    {
-        QtdFechaColchete++;
-    }
+            if((c == '(') ||(c == '{') || (c == '[') || (c == '<'))
+            {
+                Pilha.push(c);
+            }
+            else if((c == ')') ||(c == '}') || (c == ']') || (c == '>'))
+            {
+                if(Pilha.size() > 0)
+                {
+                    if(!verificaFechamento(c,(Character)Pilha.pop()))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
-    public void encontrouAbreChave()
-    {
-        QtdAbreChave++;
-    }
+        }
 
-    public void encontrouFechaChave()
-    {
-        QtdFechaChave++;
-    }
-
-    public void encontrouAbreMaiorQ()
-    {
-        QtdAbreMaiorQ++;
-    }
-
-    public void encontrouFechaMaiorQ()
-    {
-        QtdFechaMaiorQ++;
-    }
-
-    public void encontrouAbreMenorQ()
-    {
-        QtdAbreMenorQ++;
-    }
-
-    public void encontrouFechaMenorQ()
-    {
-        QtdFechaMenorQ++;
-    }
-
-    public boolean estaBalanceado()
-    {
-        if((QtdAbreParenteses == QtdFechaParenteses) && (QtdAbreColchete == QtdFechaColchete)
-                && (QtdAbreChave == QtdFechaChave) && (QtdAbreMaiorQ == QtdFechaMaiorQ) && (QtdAbreMenorQ == QtdFechaMenorQ))
-            return true;
-
-        return false;
+        return true;
     }
 }
